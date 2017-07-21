@@ -21,11 +21,13 @@ instruction caches). Click here to see the output and results.
 */
 
 #include <sys/time.h>
+#include <stdio.h>
+#include <stdlib.h>
 #define PAGE_SIZE 8192
 #define TOTAL_MEM_SIZE (4096 * 1024)
 #define L1_CACHE_LINE_SIZE 32 
 
-main(int argc, char *argv[]) 
+int main(int argc, char *argv[]) 
 {
     float total_time;
     register int *a, *b, i, num_cache_lines_guess, num_iter, k, l;
@@ -39,7 +41,7 @@ main(int argc, char *argv[])
 
     num_cache_lines_guess = atoi(argv[1]);
     b = a = (void *) sbrk(TOTAL_MEM_SIZE);
-
+    //b = a = (int*)malloc(TOTAL_MEM_SIZE);
     /* Touch all pages */
     for(k = 0; k < TOTAL_MEM_SIZE/PAGE_SIZE; k++, a += 2048)
         *a = 1;
@@ -61,5 +63,6 @@ main(int argc, char *argv[])
     printf("Access time for block of size %d : %f microseconds\n",
     num_cache_lines_guess * L1_CACHE_LINE_SIZE, total_time/num_iter);
 
+    return 0;
 }
 

@@ -7,15 +7,20 @@ are that the cache is direct mapped and virtually addressed.
 */
 
 #include <unistd.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
 
 #define NUM_PAGES 1024
 #define MAX_GUESS 128*1024
 
-main() 
+double time_elapsed(struct timespec start, struct timespec end);
+struct timespec start,end;
+int main() 
 {
     volatile char *a;
     register int pagesize, i, incr;
-    hrtime_t start, end;
+    //struct timespec start, end;
     long long int calc;
 
     pagesize = sysconf(_SC_PAGESIZE);
@@ -26,15 +31,24 @@ main()
 
     for (i=0; i < NUM_PAGES; i++) a[pagesize*i] = 0;
 
-    for(incr=1; incr < MAX_GUESS; incr*=2) 
-	{
-        start = gethrtime();
-        for(i=pagesize*NUM_PAGES/4; i<pagesize*(NUM_PAGES/4 + 1); i++)
+    for(incr=1; incr < MAX_GUESS; incr*=2)
+    {
+        //start = gettime();
+        clock_gettime(CLOCK_REALTIME, start);
+	for(i=pagesize*NUM_PAGES/4; i<pagesize*(NUM_PAGES/4 + 1); i++)
             a[i] += a[i+incr];
-        end = gethrtime();
-        calc = (end - start) / (pagesize);
+        //end = gettime();
+        clock_gettime(CLOCK_REALTIME, end);
+	calc = (time_elapsed(start,end)) / (pagesize);
         printf("Avg time (%d accesses, incr = %d) = %lld nsec\n", pagesize, incr, calc);
         usleep(1000);
-    } 
-
+    }
+    return 0; 
+}
+double time_elapsed(struct timespec start, struct timespec end)
+{
+	double t;
+	t=(end.tv_sec-start.tv_sec)*1000;
+	t+=(end.tv_nsec-start.tv_nsec)*0.000001;
+	return t;
 }
