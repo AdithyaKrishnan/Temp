@@ -10,12 +10,12 @@ are that the cache is direct mapped and virtually addressed.
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
-
+double time_elapsed(struct timespec start, struct timespec end);
 #define NUM_PAGES 1024
 #define MAX_GUESS 128*1024
 
-double time_elapsed(struct timespec start, struct timespec end);
-struct timespec start,end;
+struct timespec start;
+struct timespec end;
 int main() 
 {
     volatile char *a;
@@ -33,12 +33,10 @@ int main()
 
     for(incr=1; incr < MAX_GUESS; incr*=2)
     {
-        //start = gettime();
-        clock_gettime(CLOCK_REALTIME, start);
+        clock_gettime(CLOCK_REALTIME, &start); //Start time noted
 	for(i=pagesize*NUM_PAGES/4; i<pagesize*(NUM_PAGES/4 + 1); i++)
             a[i] += a[i+incr];
-        //end = gettime();
-        clock_gettime(CLOCK_REALTIME, end);
+        clock_gettime(CLOCK_REALTIME, &end); //End time noted
 	calc = (time_elapsed(start,end)) / (pagesize);
         printf("Avg time (%d accesses, incr = %d) = %lld nsec\n", pagesize, incr, calc);
         usleep(1000);
