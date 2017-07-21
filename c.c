@@ -6,6 +6,8 @@ Miss penalty will be latency - hittime. Measuring hittime is trivial.)
 */
 
 #include <sys/time.h> 
+#include <stdio.h>
+#include <time.h>
 #define PAGE_SIZE 8192 
 #define L1_CACHE_LINE_SIZE 32 
 #define L1_CACHE_SIZE 16384
@@ -28,8 +30,9 @@ main(int argc, char *argv[])
 
     for(a = b,k = 0; k < num_iter; k++, a = b) 
 	{
-        /* Alternate accesses to blocks of data, each of size = L1_CACHE_SIZE. These blocks
-            mutually knock each other out of the L1 cache, resulting in L1 cache misses for every access */
+        /* Alternate accesses to blocks of data, each of size = L1_CACHE_SIZE. 
+	   These blocks mutually knock each other out of the L1 cache, 
+	    resulting in L1 cache misses for every access */
         /* Each iteration in the loop accesses one cache line */
         for(l = 0; l < L1_CACHE_SIZE/L1_CACHE_LINE_SIZE; l++,a += 8)
             i = *a;
