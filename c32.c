@@ -10,7 +10,7 @@ Miss penalty will be latency - hittime. Measuring hittime is trivial.)
 #include <time.h>
 #define PAGE_SIZE 8192
 #define L1_CACHE_LINE_SIZE 32
-#define L1_CACHE_SIZE 32768	//16384
+#define L1_CACHE_SIZE 16384 //32768
 
 main(int argc, char *argv[])
 {

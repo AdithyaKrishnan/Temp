@@ -18,11 +18,12 @@ struct timespec start;
 struct timespec end;
 int main() 
 {
-    volatile char *a;
-    register int pagesize, i, incr;
+    //volatile char *a;
+    char *a;
+    //register int pagesize, i, incr;
+    int pagesize, i, incr;
     //struct timespec start, end;
     long long int calc;
-
     pagesize = sysconf(_SC_PAGESIZE);
 
     printf("PAGESIZE = %d\n", pagesize);
